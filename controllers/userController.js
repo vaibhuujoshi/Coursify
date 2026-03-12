@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 import UserModel from "../models/user";
 
+const JWT_SECRET = 
+
 async function signup(req, res) {
     try {
         const requiredBody = z.object({
@@ -56,4 +58,65 @@ async function signup(req, res) {
         })
     }
 
+}
+
+async function signin() {
+    try {
+        const requiredBody = z.object({
+            email: z.string().min(3).max(100).email(),
+            password: z.string()
+                .min(8, { message: "Password should have minimum length of 8" })
+                .max(15, "Password is too long")
+                .regex(/^(?=.*[A-Z]).{8,}$/, {
+                    message:
+                        "Should Contain at least one uppercase letter and have a minimum length of 8 characters.",
+                })
+        });
+
+        const parsedWithSuccess = requiredBody.safeParse(req.body);
+
+        if (!parsedWithSuccess) {
+            return res.status(403).json({
+                message: "Invalid Format"
+            })
+        }
+
+        const { email, password } = req.body;
+
+        const user = await UserModel.findOne({
+            email
+        })
+
+        if (!user) {
+            return res.status(403).json({
+                message: "User does not exist"
+            })
+        }
+
+        const passwordMatch = bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(403).josn({
+                message: "Wrong Password"
+            })
+        }
+
+        const token = jwt.sign({
+            userId: user._id
+        },
+            JWT_SECRET,
+            {
+                expiresIn: "1h"
+            })
+
+        res.status(200).json({
+            message: "You are signed in Successfully",
+            token: token
+        })
+
+    } catch (err) {
+        res.status(500).json({
+            message: "Error in server side"
+        })
+    }
 }
