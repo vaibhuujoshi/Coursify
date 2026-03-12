@@ -8,6 +8,5 @@ const router = express.Router();
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.get("/me", auth, authorization, getAdmin);
-// add authorization middleware for admin
 
 export default router;
