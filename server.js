@@ -1,12 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
 import userRoutes from "./routes/userRoutes.js"
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 
-mongoose.connect("YOUR_MONGO_URL")
+const MongoDB_URL = process.env.MONGODB_CON;
+
+mongoose.connect(MongoDB_URL)
 .then(() => {
     console.log("MongoDB connected");
 });
