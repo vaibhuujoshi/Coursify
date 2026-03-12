@@ -68,7 +68,7 @@ async function signup(req, res) {
 
 }
 
-async function signin() {
+async function signin(req, res) {
     try {
         const requiredBody = z.object({
             email: z.string().min(3).max(100).email(),
