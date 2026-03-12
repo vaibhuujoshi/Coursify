@@ -114,7 +114,7 @@ async function signin(req, res) {
 }
 
 async function getUser(req, res) {
-    const user = await UserModel.findById(req.userId).select("-password");
+    const user = await UserModel.findById(req.user.id).select("-password");
     res.status(200).json(user);
 }
 
