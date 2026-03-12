@@ -24,7 +24,7 @@ function auth(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.userId = decoded.userId;
+        req.userId = decoded.id;
         next();
     } catch(err) {
         return res.status(401).json({
