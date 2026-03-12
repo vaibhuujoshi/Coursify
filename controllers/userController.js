@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import UserModel from "../models/user";
@@ -43,7 +42,7 @@ async function signup(req, res) {
         })
 
         if (user) {
-            return res.status(500).json({
+            return res.status(409).json({
                 message: "User already exist"
             })
         }
@@ -104,12 +103,12 @@ async function signin(req, res) {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(403).josn({
+            return res.status(403).json({
                 message: "Wrong Password"
             })
         }
 
-        const token = generateToken(user._id, JWT_SECRET);
+        const token = generateToken(user._id);
 
         res.status(200).json({
             message: "You are signed in Successfully",
