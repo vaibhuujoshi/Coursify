@@ -1,16 +1,7 @@
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import UserModel from "../models/user.js";
-import dotenv from "dotenv";
 import generateToken from "../utils/generateToken.js";
-
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in environment variables");
-}
 
 async function signup(req, res) {
     try {
@@ -108,7 +99,7 @@ async function signin(req, res) {
             })
         }
 
-        const token = generateToken(user._id);
+        const token = generateToken(user._id, "user");
 
         res.status(200).json({
             message: "You are signed in Successfully",
