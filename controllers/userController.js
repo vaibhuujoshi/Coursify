@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 import UserModel from "../models/user";
 import dotenv from "dotenv";
+import generateToken from "../utils/generateToken";
 
 dotenv.config();
 
@@ -29,7 +30,7 @@ async function signup(req, res) {
 
         const parsedWithSuccess = requiredBody.safeParse(req.body);
 
-        if (!parsedWithSuccess) {
+        if (!parsedWithSuccess.success) {
             return res.status(403).json({
                 message: "Invalid Format"
             })
@@ -82,7 +83,7 @@ async function signin() {
 
         const parsedWithSuccess = requiredBody.safeParse(req.body);
 
-        if (!parsedWithSuccess) {
+        if (!parsedWithSuccess.success) {
             return res.status(403).json({
                 message: "Invalid Format"
             })
@@ -108,13 +109,7 @@ async function signin() {
             })
         }
 
-        const token = jwt.sign({
-            userId: user._id
-        },
-            JWT_SECRET,
-            {
-                expiresIn: "1h"
-            })
+        const token = generateToken(user._id, JWT_SECRET);
 
         res.status(200).json({
             message: "You are signed in Successfully",
