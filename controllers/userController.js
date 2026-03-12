@@ -113,8 +113,9 @@ async function signin(req, res) {
     }
 }
 
-function getUser(req, res) {
-    res.status(200).json(req.userId);
+async function getUser(req, res) {
+    const user = await UserModel.findById(req.userId).select("-password");
+    res.status(200).json(user);
 }
 
 export {signin, signup, getUser};
