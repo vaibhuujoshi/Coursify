@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import UserModel from "../models/user";
+import UserModel from "../models/user.js";
 import dotenv from "dotenv";
-import generateToken from "../utils/generateToken";
+import generateToken from "../utils/generateToken.js";
 
 dotenv.config();
 
@@ -121,3 +121,9 @@ async function signin(req, res) {
         })
     }
 }
+
+function getUser(req, res) {
+    res.status(200).json(req.userId);
+}
+
+export {signin, signup, getUser};
