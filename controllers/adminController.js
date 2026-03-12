@@ -1,12 +1,7 @@
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
 import { z } from "zod";
 import generateToken from "../utils/generateToken.js";
 import AdminModel from "../models/admin.js";
-
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET;
 
 async function signup(req, res) {
     try {
@@ -26,7 +21,7 @@ async function signup(req, res) {
         const parsedWithSuccess = requiredBody.safeParse(req.body);
 
         if (!parsedWithSuccess.success) {
-            return res.status(403).json({
+            return res.status(400).json({
                 message: "Invalid Format"
             })
         }
@@ -39,7 +34,7 @@ async function signup(req, res) {
 
         if (admin) {
             return res.status(409).json({
-                message: "Admin already exits"
+                message: "Admin already exists"
             })
         }
 
@@ -79,7 +74,7 @@ async function signin(req, res) {
         const parsedWithSuccess = requiredBody.safeParse(req.body);
 
         if (!parsedWithSuccess.success) {
-            return res.status(403).json({
+            return res.status(400).json({
                 message: "Invalid Format"
             })
         }
@@ -91,7 +86,7 @@ async function signin(req, res) {
         })
 
         if (!admin) {
-            return res.status(409).json({
+            return res.status(404).json({
                 message: "Admin does not exist"
             })
         }
@@ -118,8 +113,9 @@ async function signin(req, res) {
     }
 }
 
-function getAdmin(req, res) {
-    res.status(200).json(req.userId);
+async function getAdmin(req, res) {
+    const admin = await AdminModel.findById(req.userId).select("-password");
+    res.status(200).json(admin);
 }
 
-export {signup, signin, getAdmin};
+export { signup, signin, getAdmin };
