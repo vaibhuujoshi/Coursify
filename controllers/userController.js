@@ -2,8 +2,15 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import UserModel from "../models/user";
+import dotenv from "dotenv";
 
-const JWT_SECRET = 
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 async function signup(req, res) {
     try {
@@ -53,7 +60,7 @@ async function signup(req, res) {
             message: "You are signed up successfully"
         })
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "There is some error from server side"
         })
     }
@@ -115,7 +122,7 @@ async function signin() {
         })
 
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Error in server side"
         })
     }
