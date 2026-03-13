@@ -23,12 +23,18 @@ async function course(req, res) {
 
         const creatorId = req.user.id;
 
+        const now = new Date();
+        const createdAt = now.toLocaleString('en-IN', {
+            hour12: true
+        });
+
         const course = await CourseModel.create({
             title,
             description,
             price,
             imageUrl,
             published,
+            createdAt,
             creatorId
         })
 
@@ -78,6 +84,11 @@ async function updateCourse(req, res) {
 
         const creatorId = req.user.id;
 
+        const now = new Date();
+        const updatedAt = now.toLocaleString('en-IN', {
+            hour12: true
+        });
+
         const updatedCourse = await CourseModel.updateOne({
             _id: courseId,
             creatorId
@@ -86,7 +97,8 @@ async function updateCourse(req, res) {
             description,
             price,
             imageUrl,
-            published
+            published,
+            updatedAt
         })
 
         res.status(200).json({
