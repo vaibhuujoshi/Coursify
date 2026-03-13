@@ -33,7 +33,8 @@ async function course(req, res) {
         })
 
         res.status(200).json({
-            message: "Course created successfully"
+            message: "Course created successfully",
+            courseId: course._id
         })
 
     } catch (err) {
@@ -99,3 +100,5 @@ async function updateCourse(req, res) {
         })
     }
 }
+
+export { course, updateCourse };
