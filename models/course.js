@@ -7,6 +7,7 @@ const CourseSchema = new Schema({
     description: {type: String, required: true},
     price: {type: Number, required: true},
     imageUrl: {type: String, required: true},
+    published: {type: Boolean, required: true},
     creatorId: {type: Schema.Types.ObjectId, ref: 'admins'}
 })
 
