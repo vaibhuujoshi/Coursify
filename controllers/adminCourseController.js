@@ -1,14 +1,14 @@
-import CourseModel from "../models/course";
+import CourseModel from "../models/course.js";
 import { z } from "zod";
 
 async function course(req, res) {
     try {
         const requiredBody = z.object({
-            title: z.string().min(1).max(100),
-            description: z.string().min(0).max(100),
+            title: z.string().min(1).max(1000),
+            description: z.string().min(0).max(1000),
             price: z.number().min(1),
-            imageUrl: z.string().min(0).max(100),
-            published: z.boolean
+            imageUrl: z.string().min(0).max(1000),
+            published: z.boolean()
         });
 
         const parsedWithSuccess = requiredBody.safeParse(req.body);
@@ -65,11 +65,11 @@ async function updateCourse(req, res) {
         }
 
         const requiredBody = z.object({
-            title: z.string().min(1).max(100),
-            description: z.string().min(0).max(100),
+            title: z.string().min(1).max(1000),
+            description: z.string().min(0).max(1000),
             price: z.number().min(1),
-            imageUrl: z.string().min(0).max(100),
-            published: z.boolean
+            imageUrl: z.string().min(0).max(1000),
+            published: z.boolean()
         });
 
         const parsedWithSuccess = requiredBody.safeParse(req.body);
