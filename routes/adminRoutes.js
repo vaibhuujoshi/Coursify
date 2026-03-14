@@ -10,6 +10,6 @@ router.post("/signup", signup);
 router.post("/signin", signin);
 router.get("/me", auth, authorization, getAdmin);
 router.post("/course", auth, authorization, course);
-router.put("/course", auth, authorization, updateCourse);
+router.put("/course/:courseId", auth, authorization, updateCourse);
 
 export default router;
