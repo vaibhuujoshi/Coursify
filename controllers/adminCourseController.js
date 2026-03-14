@@ -54,6 +54,12 @@ async function updateCourse(req, res) {
     try {
         const courseId = req.params.courseId;
 
+        if (!courseId) {
+            return res.status(403).json({
+                message: "Provide course id"
+            })
+        }
+
         const course = await CourseModel.findById(courseId);
 
         if (!course) {
@@ -111,4 +117,34 @@ async function updateCourse(req, res) {
     }
 }
 
-export { course, updateCourse };
+async function deleteCourse(req, res) {
+    try {
+        const courseId = req.params.courseId;
+
+        if (!courseId) {
+            return res.status(403).json({
+                message: "Provide course id"
+            })
+        }
+
+        const course = await CourseModel.findByIdAndDelete(courseId);
+
+        if (!course) {
+            return res.status(404).json({
+                message: "No such course exist"
+            })
+        }
+
+        res.status(200).json({
+            message: "Course deleted successfully",
+            courseId: course._id
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            message: "There is some error from server side"
+        })
+    }
+}
+
+export { course, updateCourse, deleteCourse };
