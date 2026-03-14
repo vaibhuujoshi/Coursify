@@ -54,9 +54,7 @@ async function updateCourse(req, res) {
     try {
         const courseId = req.params.courseId;
 
-        const course = await CourseModel.findOne({
-            courseId
-        })
+        const course = await CourseModel.findById(courseId);
 
         if (!course) {
             return res.status(409).json({
