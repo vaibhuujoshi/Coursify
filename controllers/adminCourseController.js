@@ -147,4 +147,24 @@ async function deleteCourse(req, res) {
     }
 }
 
-export { course, updateCourse, deleteCourse };
+async function getCourses(req, res) {
+    try {
+        const courses = await CourseModel.find({});
+
+        if (!courses) {
+            return res.status(404).json({
+                message: "There are no course"
+            })
+        }
+
+        res.status(200).json(courses);
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: "There is some error from server side"
+        })
+    }
+}
+
+export { course, updateCourse, deleteCourse, getCourses };
