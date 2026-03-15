@@ -151,7 +151,7 @@ async function getCourses(req, res) {
     try {
         const courses = await CourseModel.find({}).lean();
 
-        if (!courses) {
+        if (courses.length === 0) {
             return res.status(404).json({
                 message: "There are no course"
             })
