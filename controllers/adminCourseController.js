@@ -149,7 +149,7 @@ async function deleteCourse(req, res) {
 
 async function getCourses(req, res) {
     try {
-        const courses = await CourseModel.find({});
+        const courses = await CourseModel.find({}).lean();
 
         if (!courses) {
             return res.status(404).json({
