@@ -160,7 +160,6 @@ async function getCourses(req, res) {
         res.status(200).json(courses);
 
     } catch (err) {
-        console.log(err)
         return res.status(500).json({
             message: "There is some error from server side"
         })
