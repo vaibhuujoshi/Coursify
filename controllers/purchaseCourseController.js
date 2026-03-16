@@ -11,6 +11,18 @@ async function purchaseCourse(req, res) {
             })
         }
 
+        const userId = req.user.id;
+
+        const purchased = await PurchaseModel.findOne({
+            userId, courseId
+        }).select("_id");
+
+        if (purchased) {
+            return res.status(403).json({
+                message: "You have already purchased this course"
+            })
+        }
+
         const course = await CourseModel.findById(courseId);
 
         if (!course) {
@@ -18,8 +30,6 @@ async function purchaseCourse(req, res) {
                 message: "No such course exist"
             })
         }
-
-        const userId = req.user.id;
 
         const now = new Date();
         const purchasedAt = now.toLocaleString('en-IN', {
