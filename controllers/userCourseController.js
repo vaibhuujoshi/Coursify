@@ -45,3 +45,5 @@ async function getACourse(req, res) {
         })
     }
 }
+
+export { getCourses, getACourse };
