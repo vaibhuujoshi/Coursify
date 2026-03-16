@@ -18,7 +18,7 @@ async function purchaseCourse(req, res) {
         }).select("_id");
 
         if (purchased) {
-            return res.status(403).json({
+            return res.status(400).json({
                 message: "You have already purchased this course"
             })
         }
