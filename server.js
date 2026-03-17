@@ -3,12 +3,14 @@ import mongoose from "mongoose";
 import userRoutes from "./routes/userRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 const MongoDB_URL = process.env.MONGODB_CON;
 

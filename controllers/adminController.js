@@ -101,9 +101,15 @@ async function signin(req, res) {
 
         const token = generateToken(admin._id, "admin");
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 1000
+        })
+
         res.status(200).json({
-            message: "Admin is signed in successfully",
-            token
+            message: "Admin is signed in successfully"
         })
 
     } catch (err) {

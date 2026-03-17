@@ -100,10 +100,16 @@ async function signin(req, res) {
         }
 
         const token = generateToken(user._id, "user");
+        
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 1000
+        })
 
         res.status(200).json({
-            message: "You are signed in Successfully",
-            token: token
+            message: "You are signed in Successfully"
         })
 
     } catch (err) {
@@ -118,4 +124,4 @@ async function getUser(req, res) {
     res.status(200).json(user);
 }
 
-export {signin, signup, getUser};
+export { signin, signup, getUser };
