@@ -6,21 +6,13 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 function auth(req, res, next) {
-    const authHeader = req.cookies.token;
+    const token = req.cookies.token;
 
-    if (!authHeader) {
+    if (!token) {
         return res.status(401).json({
             message: "Token Missing"
         })
     }
-
-    if (!authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({
-            msg: "Invalid authorization format"
-        });
-    }
-
-    const token = authHeader.split(" ")[1];
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
