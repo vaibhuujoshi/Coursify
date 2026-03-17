@@ -99,7 +99,7 @@ async function signin(req, res) {
             })
         }
 
-        const token = generateToken(user._id, "user");
+        const token = generateToken(user._id, "user");z
 
         res.status(200).json({
             message: "You are signed in Successfully",
