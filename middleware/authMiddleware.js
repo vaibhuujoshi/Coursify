@@ -6,7 +6,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 function auth(req, res, next) {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.cookies.token;
 
     if (!authHeader) {
         return res.status(401).json({
