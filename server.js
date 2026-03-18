@@ -5,6 +5,7 @@ import adminRoutes from "./routes/adminRoutes.js"
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { apiLimiter } from "./middleware/rateLimiter.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(apiLimiter);
+app.use(errorHandler);
 
 const MongoDB_URL = process.env.MONGODB_CON;
 
