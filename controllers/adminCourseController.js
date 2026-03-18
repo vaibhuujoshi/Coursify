@@ -133,13 +133,26 @@ async function deleteCourse(req, res) {
             })
         }
 
-        const course = await CourseModel.findByIdAndDelete(courseId);
+        const course = await CourseModel.findById(courseId);
 
         if (!course) {
-            return res.status(404).json({
+            return res.status(409).json({
                 message: "No such course exist"
             })
         }
+
+        const creatorId = req.user.id;
+
+        if (!course.creatorId.equals(creatorId)) {
+            return res.status(403).json({
+                message: "This admin is not the creator of this course"
+            });
+        }
+
+        await CourseModel.deleteOne({
+            _id: courseId,
+            creatorId,
+        })
 
         res.status(200).json({
             message: "Course deleted successfully",
