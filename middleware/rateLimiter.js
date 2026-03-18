@@ -1,15 +1,66 @@
 import rateLimit from "express-rate-limit";
 import { success } from "zod";
 
-const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 5,
-    message: {
-        success: false,
-        message: "Too many requests, ply try again later."
-    },
+const apiLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 100,
     standardHeaders: true,
-    legacyHeaders: false
+    legacyHeaders: false,
+
+    handler: (req, res) => {
+        return res.status(429).json({
+            success: false,
+            message: "Too many requests, please try again later.",
+            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+        })
+    }
 })
 
-export default limiter;
+const userLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 100,
+
+    keyGenerator: (req) => {
+        return req.user?.id || req.ip;
+    },
+
+    standardHeaders: true,
+    legacyHeaders: false,
+
+    handler: (req, res) => {
+        return res.status(429).json({
+            success: false,
+            message: "User rate limit exceeded. Try again later.",
+            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+        })
+    }
+})
+
+const loginLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 mins
+    max: 5,
+    skipSuccessfulRequests: true,
+
+    handler: (req, res) => {
+        return res.status(429).json({
+            success: false,
+            message: "Too many login attempts. Try again later.",
+            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+        });
+    }
+});
+
+const signupLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 10,
+
+    handler: (req, res) => {
+        return res.status(429).json({
+            success: false,
+            message: "Too many accounts created from this IP.",
+            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+        });
+    }
+});
+
+export { apiLimiter, userLimiter, loginLimiter, signupLimiter };
