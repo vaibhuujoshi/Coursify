@@ -83,9 +83,7 @@ async function updateCourse(req, res) {
         });
 
     } catch (err) {
-        return res.status(500).json({
-            message: "There is some error from server side"
-        });
+        next(err);
     }
 }
 
@@ -116,9 +114,7 @@ async function deleteCourse(req, res) {
         });
 
     } catch (err) {
-        return res.status(500).json({
-            message: "There is some error from server side"
-        });
+        next(err);
     }
 }
 
@@ -135,9 +131,7 @@ async function getCourses(req, res) {
         res.status(200).json(courses);
 
     } catch (err) {
-        return res.status(500).json({
-            message: "There is some error from server side"
-        })
+        next(err);
     }
 }
 
