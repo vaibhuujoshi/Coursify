@@ -68,6 +68,14 @@ async function updateCourse(req, res) {
             })
         }
 
+        const creatorId = req.user.id;
+
+        if (!course.creatorId.equals(creatorId)) {
+            return res.status(403).json({
+                message: "This admin is not the creator of this course"
+            });
+        }
+
         const requiredBody = z.object({
             title: z.string().min(1).max(1000),
             description: z.string().min(0).max(1000),
@@ -85,8 +93,6 @@ async function updateCourse(req, res) {
         }
 
         const { title, description, price, imageUrl, published } = req.body;
-
-        const creatorId = req.user.id;
 
         const now = new Date();
         const updatedAt = now.toLocaleString('en-IN', {
