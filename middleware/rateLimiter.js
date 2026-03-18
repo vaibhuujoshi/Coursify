@@ -9,8 +9,7 @@ const apiLimiter = rateLimit({
     handler: (req, res) => {
         return res.status(429).json({
             success: false,
-            message: "Too many requests, please try again later.",
-            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
+            message: "Too many requests, please try again later."
         })
     }
 })
@@ -29,8 +28,7 @@ const userLimiter = rateLimit({
     handler: (req, res) => {
         return res.status(429).json({
             success: false,
-            message: "User rate limit exceeded. Try again later.",
-            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
+            message: "User rate limit exceeded. Try again later."
         })
     }
 })
@@ -49,8 +47,7 @@ const adminLimiter = rateLimit({
     handler: (req, res) => {
         return res.status(429).json({
             success: false,
-            message: "Admin rate limit exceeded. Try again later.",
-            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
+            message: "Admin rate limit exceeded. Try again later."
         })
     }
 })
@@ -63,8 +60,7 @@ const loginLimiter = rateLimit({
     handler: (req, res) => {
         return res.status(429).json({
             success: false,
-            message: "Too many login attempts. Try again later.",
-            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
+            message: "Too many login attempts. Try again later."
         });
     }
 });
@@ -76,8 +72,7 @@ const signupLimiter = rateLimit({
     handler: (req, res) => {
         return res.status(429).json({
             success: false,
-            message: "Too many accounts created from this IP.",
-            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
+            message: "Too many accounts created from this IP."
         });
     }
 });
