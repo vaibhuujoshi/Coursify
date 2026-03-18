@@ -1,5 +1,4 @@
 import rateLimit from "express-rate-limit";
-import { success } from "zod";
 
 const apiLimiter = rateLimit({
     windowMs: 10 * 60 * 1000,
@@ -11,7 +10,7 @@ const apiLimiter = rateLimit({
         return res.status(429).json({
             success: false,
             message: "Too many requests, please try again later.",
-            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
         })
     }
 })
@@ -31,7 +30,7 @@ const userLimiter = rateLimit({
         return res.status(429).json({
             success: false,
             message: "User rate limit exceeded. Try again later.",
-            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
         })
     }
 })
@@ -51,7 +50,7 @@ const adminLimiter = rateLimit({
         return res.status(429).json({
             success: false,
             message: "Admin rate limit exceeded. Try again later.",
-            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
         })
     }
 })
@@ -65,7 +64,7 @@ const loginLimiter = rateLimit({
         return res.status(429).json({
             success: false,
             message: "Too many login attempts. Try again later.",
-            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
         });
     }
 });
@@ -78,7 +77,7 @@ const signupLimiter = rateLimit({
         return res.status(429).json({
             success: false,
             message: "Too many accounts created from this IP.",
-            retryAfter: Math.ceil(options.windowMs / 1000) + " seconds"
+            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000) + " seconds"
         });
     }
 });
