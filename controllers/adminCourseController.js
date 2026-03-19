@@ -1,8 +1,8 @@
 import CourseModel from "../models/course.js";
-import { createCourse } from "../services/courseService.js";
+import { createCourse, updateCourse, deleteCourse } from "../services/courseService.js";
 import { courseSchema } from "../validators/courseValidator.js";
 
-async function course(req, res, next) {
+async function createCourseHandler(req, res, next) {
     try {
         const parsed = courseSchema.safeParse(req.body);
 
@@ -26,7 +26,7 @@ async function course(req, res, next) {
     }
 }
 
-async function updateCourse(req, res, next) {
+async function updateCourseHandler(req, res, next) {
     try {
         const courseId = req.params.courseId;
 
@@ -44,21 +44,11 @@ async function updateCourse(req, res, next) {
             });
         }
 
-        const { title, description, price, imageUrl, published } = parsed.data;
+        const adminId = req.user.id;
 
-        const updatedCourse = await CourseModel.findOneAndUpdate(
-            { _id: courseId, creatorId: req.user.id },
-            {
-                title,
-                description,
-                price,
-                imageUrl,
-                published
-            },
-            { new: true }
-        );
+        const result = await updateCourse(parsed.data, courseId, adminId);
 
-        if (!updatedCourse) {
+        if (!result) {
             return res.status(403).json({
                 message: "Not allowed or course does not exist"
             });
@@ -66,7 +56,7 @@ async function updateCourse(req, res, next) {
 
         res.status(200).json({
             message: "Course updated successfully",
-            courseId: updatedCourse._id
+            courseId: result._id
         });
 
     } catch (err) {
@@ -74,7 +64,7 @@ async function updateCourse(req, res, next) {
     }
 }
 
-async function deleteCourse(req, res, next) {
+async function deleteCourseHandler(req, res, next) {
     try {
         const courseId = req.params.courseId;
 
@@ -84,12 +74,11 @@ async function deleteCourse(req, res, next) {
             });
         }
 
-        const deletedCourse = await CourseModel.findOneAndDelete({
-            _id: courseId,
-            creatorId: req.user.id
-        });
+        const adminId = req.user.id;
 
-        if (!deletedCourse) {
+        const result = await deleteCourse(courseId, adminId)
+
+        if (!result) {
             return res.status(403).json({
                 message: "Not allowed or course does not exist"
             });
@@ -97,7 +86,7 @@ async function deleteCourse(req, res, next) {
 
         res.status(200).json({
             message: "Course deleted successfully",
-            courseId: deletedCourse._id
+            courseId: result._id
         });
 
     } catch (err) {
@@ -122,4 +111,4 @@ async function getCourses(req, res, next) {
     }
 }
 
-export { course, updateCourse, deleteCourse, getCourses };
+export { createCourseHandler, updateCourseHandler, deleteCourseHandler, getCourses };
