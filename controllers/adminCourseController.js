@@ -1,9 +1,8 @@
 import CourseModel from "../models/course.js";
-import { z } from "zod";
 import { createCourse } from "../services/courseService.js";
 import { courseSchema } from "../validators/courseValidator.js";
 
-async function course(req, res) {
+async function course(req, res, next) {
     try {
         const parsed = courseSchema.safeParse(req.body);
 
@@ -27,7 +26,7 @@ async function course(req, res) {
     }
 }
 
-async function updateCourse(req, res) {
+async function updateCourse(req, res, next) {
     try {
         const courseId = req.params.courseId;
 
@@ -75,7 +74,7 @@ async function updateCourse(req, res) {
     }
 }
 
-async function deleteCourse(req, res) {
+async function deleteCourse(req, res, next) {
     try {
         const courseId = req.params.courseId;
 
@@ -106,7 +105,7 @@ async function deleteCourse(req, res) {
     }
 }
 
-async function getCourses(req, res) {
+async function getCourses(req, res, next) {
     try {
         const courses = await CourseModel.find({}).lean();
 
