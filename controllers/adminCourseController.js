@@ -37,14 +37,6 @@ async function updateCourse(req, res) {
             });
         }
 
-        const requiredBody = z.object({
-            title: z.string().min(1).max(1000),
-            description: z.string().min(0).max(1000),
-            price: z.number().min(1),
-            imageUrl: z.string().min(0).max(1000),
-            published: z.boolean()
-        });
-
         const parsed = requiredBody.safeParse(req.body);
 
         if (!parsed.success) {
@@ -55,9 +47,6 @@ async function updateCourse(req, res) {
 
         const { title, description, price, imageUrl, published } = parsed.data;
 
-        const now = new Date();
-        const updatedAt = now.toLocaleString('en-IN', { hour12: true });
-
         const updatedCourse = await CourseModel.findOneAndUpdate(
             { _id: courseId, creatorId: req.user.id },
             {
@@ -65,8 +54,7 @@ async function updateCourse(req, res) {
                 description,
                 price,
                 imageUrl,
-                published,
-                updatedAt
+                published
             },
             { new: true }
         );
