@@ -36,7 +36,7 @@ async function updateCourse(req, res, next) {
             });
         }
 
-        const parsed = requiredBody.safeParse(req.body);
+        const parsed = courseSchema.safeParse(req.body);
 
         if (!parsed.success) {
             return res.status(400).json({
