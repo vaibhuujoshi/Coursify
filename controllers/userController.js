@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import UserModel from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
 import { signupSchema, signinSchema } from "../validators/authValidator.js";
+import { userSignup, userSignin, getUser } from "../services/userAuthService.js";
 
 async function signupHandler(req, res) {
     try {
@@ -13,32 +14,18 @@ async function signupHandler(req, res) {
             })
         }
 
-        const { email, password, firstName, lastName } = req.body;
-
-        const user = await UserModel.findOne({
-            email
-        })
-
-        if (user) {
-            return res.status(409).json({
-                message: "User already exist"
-            })
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        await UserModel.create({
-            email,
-            password: hashedPassword,
-            firstName,
-            lastName
-        })
+        await userSignup(parsed.data);
 
         res.status(201).json({
             message: "You are signed up successfully"
         })
+
     } catch (err) {
-        return res.status(500).json({
+        if (err.message === "USER_ALREADY_EXISTS") {
+            return res.status(409).json({ message: err.message });
+        }
+
+        res.status(500).json({
             message: "There is some error from server side"
         })
     }
@@ -55,28 +42,10 @@ async function signinHandler(req, res) {
             })
         }
 
-        const { email, password } = req.body;
-
-        const user = await UserModel.findOne({
-            email
-        })
-
-        if (!user) {
-            return res.status(403).json({
-                message: "User does not exist"
-            })
-        }
-
-        const passwordMatch = await bcrypt.compare(password, user.password);
-
-        if (!passwordMatch) {
-            return res.status(403).json({
-                message: "Wrong Password"
-            })
-        }
+        await userSignin(parsed.data);
 
         const token = generateToken(user._id, "user");
-        
+
         res.cookie("token", token, {
             httpOnly: true,
             secure: false,
@@ -89,15 +58,33 @@ async function signinHandler(req, res) {
         })
 
     } catch (err) {
-        return res.status(500).json({
-            message: "Error in server side"
+        if (err.message === "USER_NOT_FOUND") {
+            return res.status(404).json({ message: err.message });
+        }
+
+        if (err.message === "INVALID_PASSWORD") {
+            return res.status(403).json({ message: err.message });
+        }
+
+
+        res.status(500).json({
+            message: "There is some error from server side"
         })
     }
 }
 
 async function getUserHandler(req, res) {
-    const user = await UserModel.findById(req.user.id).select("-password");
-    res.status(200).json(user);
+    try {
+        const user = await getUser(req.user.id);
+
+        res.status(200).json(user);
+    } catch (err) {
+        if (err.message === "USER_NOT_FOUND") {
+            return res.status(404).json({ message: err.message });
+        }
+
+        res.status(500).json({ message: "Server error" });
+    }
 }
 
 export { signinHandler, signupHandler, getUserHandler };
