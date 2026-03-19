@@ -1,7 +1,6 @@
-import bcrypt from "bcrypt";
 import generateToken from "../utils/generateToken.js";
-import AdminModel from "../models/admin.js";
 import { signupSchema, signinSchema } from "../validators/authValidator.js";
+import { adminSignup, adminSignin, getAdmin } from "../services/adminAuthService.js";
 
 async function signupHandler(req, res) {
     try {
@@ -13,33 +12,18 @@ async function signupHandler(req, res) {
             })
         }
 
-        const { email, password, firstName, lastName } = req.body;
-
-        const admin = await AdminModel.findOne({
-            email
-        })
-
-        if (admin) {
-            return res.status(409).json({
-                message: "Admin already exists"
-            })
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        await AdminModel.create({
-            email,
-            password: hashedPassword,
-            firstName,
-            lastName
-        })
+        await adminSignup(parsed.data);
 
         res.status(201).json({
             message: "Admin signed up successfully"
         })
 
     } catch (err) {
-        return res.status(500).json({
+        if (err.message === "ADMIN_ALREADY_EXISTS") {
+            return res.status(409).json({ message: err.message });
+        }
+
+        res.status(500).json({
             message: "There is some error from server side"
         })
     }
@@ -55,25 +39,7 @@ async function signinHandler(req, res) {
             })
         }
 
-        const { email, password } = req.body;
-
-        const admin = await AdminModel.findOne({
-            email
-        })
-
-        if (!admin) {
-            return res.status(404).json({
-                message: "Admin does not exist"
-            })
-        }
-
-        const passwordMatch = await bcrypt.compare(password, admin.password);
-
-        if (!passwordMatch) {
-            return res.status(403).json({
-                message: "Wrong password"
-            })
-        }
+        await adminSignin(parsed.data);
 
         const token = generateToken(admin._id, "admin");
 
@@ -89,15 +55,34 @@ async function signinHandler(req, res) {
         })
 
     } catch (err) {
-        return res.status(500).json({
+        if (err.message === "ADMIN_NOT_FOUND") {
+            return res.status(404).json({ message: err.message });
+        }
+
+        if (err.message === "INVALID_PASSWORD") {
+            return res.status(403).json({ message: err.message });
+        }
+
+
+        res.status(500).json({
             message: "There is some error from server side"
         })
     }
 }
 
 async function getAdminHandler(req, res) {
-    const admin = await AdminModel.findById(req.user.id).select("-password");
-    res.status(200).json(admin);
+    try {
+        const admin = await getAdminById(req.user.id);
+
+        res.status(200).json(admin);
+
+    } catch (err) {
+        if (err.message === "ADMIN_NOT_FOUND") {
+            return res.status(404).json({ message: err.message });
+        }
+
+        res.status(500).json({ message: "Server error" });
+    }
 }
 
-export { signupHandler, signinHandler, getAdmin };
+export { signupHandler, signinHandler, getAdminHandler };
