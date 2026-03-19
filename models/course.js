@@ -8,7 +8,7 @@ const CourseSchema = new Schema({
     price: {type: Number, required: true},
     imageUrl: {type: String, required: true},
     published: {type: Boolean, required: true},
-    createdAt: {type: String, required: true},
+    creatorId: {type: Schema.Types.ObjectId, ref: 'admins'}
 }, {
     timestamps: true
 })
