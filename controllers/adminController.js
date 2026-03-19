@@ -1,26 +1,13 @@
 import bcrypt from "bcrypt";
-import { z } from "zod";
 import generateToken from "../utils/generateToken.js";
 import AdminModel from "../models/admin.js";
+import { signupSchema, signinSchema } from "../validators/authValidator.js";
 
 async function signup(req, res) {
     try {
-        const requiredBody = z.object({
-            email: z.string().min(3).max(100).email(),
-            password: z.string()
-                .min(8, { message: "Password should have minimum length of 8" })
-                .max(15, "Password is too long")
-                .regex(/^(?=.*[A-Z]).{8,}$/, {
-                    message:
-                        "Should Contain at least one uppercase letter and have a minimum length of 8 characters.",
-                }),
-            firstName: z.string().min(1).max(100),
-            lastName: z.string().min(0).max(100)
-        });
+        const parsed = signupSchema.safeParse(req.body);
 
-        const parsedWithSuccess = requiredBody.safeParse(req.body);
-
-        if (!parsedWithSuccess.success) {
+        if (!parsed.success) {
             return res.status(400).json({
                 message: "Invalid Format"
             })
@@ -60,20 +47,9 @@ async function signup(req, res) {
 
 async function signin(req, res) {
     try {
-        const requiredBody = z.object({
-            email: z.string().min(3).max(100).email(),
-            password: z.string()
-                .min(8, { message: "Password should have minimum length of 8" })
-                .max(15, "Password is too long")
-                .regex(/^(?=.*[A-Z]).{8,}$/, {
-                    message:
-                        "Should Contain at least one uppercase letter and have a minimum length of 8 characters.",
-                })
-        });
+        const parsed = signinSchema.safeParse(req.body);
 
-        const parsedWithSuccess = requiredBody.safeParse(req.body);
-
-        if (!parsedWithSuccess.success) {
+        if (!parsed.success) {
             return res.status(400).json({
                 message: "Invalid Format"
             })
