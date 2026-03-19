@@ -9,8 +9,8 @@ const CourseSchema = new Schema({
     imageUrl: {type: String, required: true},
     published: {type: Boolean, required: true},
     createdAt: {type: String, required: true},
-    updatedAt: {type: String},
-    creatorId: {type: Schema.Types.ObjectId, ref: 'admins'}
+}, {
+    timestamps: true
 })
 
 const CourseModel = mongoose.model('courses', CourseSchema);
