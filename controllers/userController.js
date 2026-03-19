@@ -3,7 +3,7 @@ import UserModel from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
 import { signupSchema, signinSchema } from "../validators/authValidator.js";
 
-async function signup(req, res) {
+async function signupHandler(req, res) {
     try {
         const parsed = signupSchema.safeParse(req.body);
 
@@ -45,7 +45,7 @@ async function signup(req, res) {
 
 }
 
-async function signin(req, res) {
+async function signinHandler(req, res) {
     try {
         const parsed = signinSchema.safeParse(req.body);
 
@@ -95,9 +95,9 @@ async function signin(req, res) {
     }
 }
 
-async function getUser(req, res) {
+async function getUserHandler(req, res) {
     const user = await UserModel.findById(req.user.id).select("-password");
     res.status(200).json(user);
 }
 
-export { signin, signup, getUser };
+export { signinHandler, signupHandler, getUserHandler };

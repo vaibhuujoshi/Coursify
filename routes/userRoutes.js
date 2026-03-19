@@ -1,5 +1,5 @@
 import express from "express";
-import { signin, signup, getUser } from "../controllers/userController.js";
+import { signinHandler, signupHandler, getUserHandler } from "../controllers/userController.js";
 import auth from "../middleware/authMiddleware.js";
 import { getCourses, getACourse } from "../controllers/userCourseController.js";
 import { purchaseCourse, getPurchasedCourses } from "../controllers/purchaseCourseController.js";
@@ -7,9 +7,9 @@ import { signupLimiter, loginLimiter, userLimiter } from "../middleware/rateLimi
 
 const router = express.Router();
 
-router.post('/signup', signupLimiter, signup);
-router.post('/signin', loginLimiter, signin);
-router.get('/me', auth, userLimiter, getUser);
+router.post('/signup', signupLimiter, signupHandler);
+router.post('/signin', loginLimiter, signinHandler);
+router.get('/me', auth, userLimiter, getUserHandler);
 
 router.get('/courses', auth, userLimiter, getCourses);
 router.get('/course/:courseId', auth, userLimiter, getACourse);

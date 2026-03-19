@@ -3,7 +3,7 @@ import generateToken from "../utils/generateToken.js";
 import AdminModel from "../models/admin.js";
 import { signupSchema, signinSchema } from "../validators/authValidator.js";
 
-async function signup(req, res) {
+async function signupHandler(req, res) {
     try {
         const parsed = signupSchema.safeParse(req.body);
 
@@ -45,7 +45,7 @@ async function signup(req, res) {
     }
 }
 
-async function signin(req, res) {
+async function signinHandler(req, res) {
     try {
         const parsed = signinSchema.safeParse(req.body);
 
@@ -95,9 +95,9 @@ async function signin(req, res) {
     }
 }
 
-async function getAdmin(req, res) {
+async function getAdminHandler(req, res) {
     const admin = await AdminModel.findById(req.user.id).select("-password");
     res.status(200).json(admin);
 }
 
-export { signup, signin, getAdmin };
+export { signupHandler, signinHandler, getAdmin };

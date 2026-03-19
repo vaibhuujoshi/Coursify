@@ -1,5 +1,5 @@
 import express from "express";
-import { signin, signup, getAdmin } from "../controllers/adminController.js";
+import { signinHandler, signupHandler, getAdminHandler } from "../controllers/adminController.js";
 import auth from "../middleware/authMiddleware.js";
 import authorization from "../middleware/authorizationMiddleware.js";
 import { createCourseHandler, updateCourseHandler, deleteCourseHandler, getCourses } from "../controllers/adminCourseController.js"
@@ -7,9 +7,9 @@ import { signupLimiter, loginLimiter, adminLimiter } from "../middleware/rateLim
 
 const router = express.Router();
 
-router.post("/signup", signupLimiter, signup);
-router.post("/signin", loginLimiter, signin);
-router.get("/me", auth, authorization, adminLimiter, getAdmin);
+router.post("/signup", signupLimiter, signupHandler);
+router.post("/signin", loginLimiter, signinHandler);
+router.get("/me", auth, authorization, adminLimiter, getAdminHandler);
 router.post("/course", auth, authorization, adminLimiter, createCourseHandler);
 router.get("/courses", auth, authorization, adminLimiter, getCourses);
 router.put("/course/:courseId", auth, authorization, adminLimiter, updateCourseHandler);
