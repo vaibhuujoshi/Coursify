@@ -34,4 +34,4 @@ async function getCourses() {
     return courses;
 }
 
-export { createCourse, updateCourse, deleteCourse };
+export { createCourse, updateCourse, deleteCourse, getCourses };

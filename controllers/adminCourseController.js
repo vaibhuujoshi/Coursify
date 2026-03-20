@@ -1,4 +1,4 @@
-import { createCourse, updateCourse, deleteCourse, getCoursesHandler } from "../services/courseService.js";
+import { createCourse, updateCourse, deleteCourse, getCourses } from "../services/courseService.js";
 import { courseSchema } from "../validators/courseValidator.js";
 
 async function createCourseHandler(req, res, next) {
@@ -95,7 +95,7 @@ async function deleteCourseHandler(req, res, next) {
 
 async function getCoursesHandler(req, res, next) {
     try {
-        const courses = await getCoursesHandler();
+        const courses = await getCourses();
 
         res.status(200).json(courses);
 
