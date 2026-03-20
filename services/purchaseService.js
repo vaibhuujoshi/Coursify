@@ -31,14 +31,10 @@ async function purchaseCourse(userId, courseId) {
 }
 
 async function getPurchasedCourses(userId) {
-    const purchases = await PurchaseModel.find({ userId });
+    const purchases = await PurchaseModel.find({ userId })
+        .populate('courseId');
 
-    const courseIds = purchases.map(p => p.courseId);
-
-    const courses = await CourseModel.find({
-        _id: { $in: courseIds }
-    });
-
+    const courses = purchases.map(p => p.courseId).filter(course => course !== null);
     return courses;
 }
 
