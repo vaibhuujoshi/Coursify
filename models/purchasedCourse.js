@@ -8,6 +8,6 @@ const PurchasedCourseSchema = new Schema({
     purchasedAt : {type: String, required: true}
 })
 
-const PurchasedCourseModel = mongoose.model('purchasedCourses', PurchasedCourseSchema);
+const PurchaseModel = mongoose.model('purchasedCourses', PurchasedCourseSchema);
 
-export default PurchasedCourseModel;
+export default PurchaseModel;
