@@ -1,5 +1,3 @@
-import bcrypt from "bcrypt";
-import UserModel from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
 import { signupSchema, signinSchema } from "../validators/authValidator.js";
 import { userSignup, userSignin, getUser } from "../services/userAuthService.js";
@@ -42,7 +40,7 @@ async function signinHandler(req, res) {
             })
         }
 
-        await userSignin(parsed.data);
+        const user = await userSignin(parsed.data);
 
         const token = generateToken(user._id, "user");
 
