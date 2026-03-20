@@ -40,11 +40,12 @@ async function getPurchasedCoursesHandler(req, res) {
     try {
         const userId = req.user.id;
         
-        getPurchasedCourses(userId);
+        const courses = await getPurchasedCourses(userId);
 
         res.status(200).json(courses);
 
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             message: "There is some error from server side"
         })
