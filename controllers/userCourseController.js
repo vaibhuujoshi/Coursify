@@ -1,14 +1,8 @@
-import CourseModel from "../models/course.js";
+import { getCourses, getACourse } from "../services/userCourseService.js";
 
-async function getCourses(req, res) {
+async function getCoursesHandler(req, res) {
     try {
-        const courses = await CourseModel.find({}).lean();
-
-        if (courses.length === 0) {
-            return res.status(404).json({
-                message: "There are no course"
-            })
-        }
+        const courses = await getCourses();
 
         res.status(200).json(courses);
 
@@ -19,7 +13,7 @@ async function getCourses(req, res) {
     }
 }
 
-async function getACourse(req, res) {
+async function getACourseHandler(req, res) {
     try {
         const courseId = req.params.courseId;
 
@@ -29,7 +23,7 @@ async function getACourse(req, res) {
             })
         }
 
-        const course = await CourseModel.findById(courseId);
+        const course = await getACourse(courseId);
 
         if (!course) {
             return res.status(404).json({
@@ -46,4 +40,4 @@ async function getACourse(req, res) {
     }
 }
 
-export { getCourses, getACourse };
+export { getCoursesHandler, getACourseHandler };
