@@ -1,5 +1,4 @@
-import CourseModel from "../models/course.js";
-import { createCourse, updateCourse, deleteCourse } from "../services/courseService.js";
+import { createCourse, updateCourse, deleteCourse, getCoursesHandler } from "../services/courseService.js";
 import { courseSchema } from "../validators/courseValidator.js";
 
 async function createCourseHandler(req, res, next) {
@@ -94,15 +93,9 @@ async function deleteCourseHandler(req, res, next) {
     }
 }
 
-async function getCourses(req, res, next) {
+async function getCoursesHandler(req, res, next) {
     try {
-        const courses = await CourseModel.find({}).lean();
-
-        if (courses.length === 0) {
-            return res.status(404).json({
-                message: "There are no course"
-            })
-        }
+        const courses = await getCoursesHandler();
 
         res.status(200).json(courses);
 
@@ -111,4 +104,4 @@ async function getCourses(req, res, next) {
     }
 }
 
-export { createCourseHandler, updateCourseHandler, deleteCourseHandler, getCourses };
+export { createCourseHandler, updateCourseHandler, deleteCourseHandler, getCoursesHandler };

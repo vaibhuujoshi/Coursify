@@ -28,4 +28,10 @@ async function deleteCourse(courseId, adminId) {
     return courseDeleted;
 }
 
+async function getCourses() {
+    const courses = await CourseModel.find({}).lean();
+    
+    return courses;
+}
+
 export { createCourse, updateCourse, deleteCourse };
