@@ -4,8 +4,9 @@ const Schema = mongoose.Schema;
 
 const PurchasedCourseSchema = new Schema({
     userId: {type: Schema.Types.ObjectId, ref: 'users'},
-    courseId: {type: Schema.Types.ObjectId, ref: 'courses'},
-    purchasedAt : {type: String, required: true}
+    courseId: {type: Schema.Types.ObjectId, ref: 'courses'}
+}, {
+    timestamps: true
 })
 
 const PurchaseModel = mongoose.model('purchasedCourses', PurchasedCourseSchema);
